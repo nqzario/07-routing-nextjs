@@ -1,21 +1,24 @@
 "use client";
 import { fetchNoteById } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Loader from "@/components/Loader/Loader";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
-import css from "./NotePreview.module.css";
-import { useRouter } from "next/navigation";
 import Modal from "@/components/Modal/Modal";
+import css from "./NotePreview.module.css";
 
 const NotePreview = () => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
-  console.log(id);
 
-  const { data, isLoading, isError } = useQuery({
+  // ✅ повертаємо Note напряму
+  const {
+    data: note,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["note", id],
-    queryFn: () => fetchNoteById(id),
+    queryFn: () => fetchNoteById(id).then((res) => res.note),
     refetchOnMount: false,
   });
 
@@ -23,16 +26,15 @@ const NotePreview = () => {
     router.back();
   };
 
-  // ✅ Доступ через data.note
-  const formattedDate = data
-    ? data.note.updatedAt
-      ? `Updated at: ${data.note.updatedAt}`
-      : `Created at: ${data.note.createdAt}`
-    : "";
-
   if (isLoading) return <Loader />;
   if (isError) return <ErrorMessage />;
-  if (!data) return null;
+  if (!note) return <p>Note not found</p>;
+
+  const formattedDate = note.updatedAt
+    ? `Updated at: ${note.updatedAt}`
+    : note.createdAt
+    ? `Created at: ${note.createdAt}`
+    : "";
 
   return (
     <Modal onClose={handleClick}>
@@ -42,9 +44,9 @@ const NotePreview = () => {
             <button onClick={handleClick} className={css.backBtn}>
               Go Back
             </button>
-            <h2>{data.note.title}</h2>
+            <h2>{note.title}</h2>
           </div>
-          <p className={css.content}>{data.note.content}</p>
+          <p className={css.content}>{note.content}</p>
           <p className={css.date}>{formattedDate}</p>
         </div>
       </div>
