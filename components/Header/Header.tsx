@@ -2,7 +2,6 @@ import Link from "next/link";
 import React from "react";
 import { FiHome } from "react-icons/fi";
 import css from "./Header.module.css";
-import TagsMenu from "../TagsMenu/TagsMenu";
 
 const Header = () => {
   return (
@@ -10,6 +9,7 @@ const Header = () => {
       <Link href="/" aria-label="Home" className={css.logo}>
         NoteHub
       </Link>
+
       <nav aria-label="Main Navigation">
         <ul className={css.navigation}>
           <li>
@@ -18,7 +18,9 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <TagsMenu />
+            <Link href="/notes/filter/all" className={css.navLink}>
+              All Notes
+            </Link>
           </li>
         </ul>
       </nav>

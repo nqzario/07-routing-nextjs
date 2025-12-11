@@ -2,11 +2,12 @@ import React from "react";
 import Link from "next/link";
 import { tagList } from "@/types/note";
 import css from "./SideBar.module.css";
+
 const SideBar = () => {
   return (
     <ul className={css.menuList}>
       <li className={css.menuItem}>
-        <Link className={css.menuLink} href="/notes/filter/All">
+        <Link className={css.menuLink} href="/notes/filter/all">
           All Notes
         </Link>
       </li>

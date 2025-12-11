@@ -2,7 +2,7 @@ import React from "react";
 
 import { redirect } from "next/navigation";
 const Redirect = () => {
-  redirect("/notes/filter/All");
+  redirect("/notes/filter/all");
   return <div></div>;
 };
 
