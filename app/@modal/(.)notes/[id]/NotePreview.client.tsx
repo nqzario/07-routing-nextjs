@@ -7,10 +7,12 @@ import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 import css from "./NotePreview.module.css";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/Modal/Modal";
+
 const NotePreview = () => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   console.log(id);
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
@@ -21,15 +23,17 @@ const NotePreview = () => {
     router.back();
   };
 
+  // ✅ Доступ через data.note
   const formattedDate = data
-    ? data.updatedAt
-      ? `Updated at: ${data.updatedAt}`
-      : `Created at: ${data.createdAt}`
+    ? data.note.updatedAt
+      ? `Updated at: ${data.note.updatedAt}`
+      : `Created at: ${data.note.createdAt}`
     : "";
 
   if (isLoading) return <Loader />;
   if (isError) return <ErrorMessage />;
   if (!data) return null;
+
   return (
     <Modal onClose={handleClick}>
       <div className={css.container}>
@@ -38,9 +42,9 @@ const NotePreview = () => {
             <button onClick={handleClick} className={css.backBtn}>
               Go Back
             </button>
-            <h2>{data.title}</h2>
+            <h2>{data.note.title}</h2>
           </div>
-          <p className={css.content}>{data.content}</p>
+          <p className={css.content}>{data.note.content}</p>
           <p className={css.date}>{formattedDate}</p>
         </div>
       </div>
